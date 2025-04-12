@@ -1,31 +1,7 @@
 # Core game logic (rules, deck, hands, etc.)
 import random
 
-
-class Card:
-    def __init__(self, rank, suit):
-        self.rank = rank
-        self.suit = suit
-        self.isAce = self.rank == "A"
-        self.isJack = self.rank == "J"
-        self.isQueen = self.rank == "Q"
-        self.isKing = self.rank == "K"
-
-    def get_value(self):
-        # Logic to return value: 11 for Ace and 10 for Jack, Queen, and King, int(rank) for 2-10
-        if self.isAce:
-            return 11  # Ace is worth 11 or 1 will be done in calculate_score():
-        elif self.isJack:
-            return 10
-        elif self.isQueen:
-            return 10
-        elif self.isKing:
-            return 10
-        else:
-            return int(self.rank)
-
-    def __str__(self):
-        return self.rank + self.suit
+from game.card import Card
 
 
 class Blackjack:
@@ -42,6 +18,7 @@ class Blackjack:
         self.currentTurn = "Player"
         self.playerBet = 0
         self.blackjack = False
+        self.playerBlackjackPayout = False
         self.result = None
         self.playerHand = []
         self.dealerHand = []
@@ -105,7 +82,35 @@ class Blackjack:
             self.dealerHand.append(self.deck.pop())
         self.playerScore = self.calculate_score(self.playerHand)
         self.dealerScore = self.calculate_score(self.dealerHand)
-        # self.check_blackjack() TODO: Implement check_blackjack()
+        self.check_blackjack()
+
+    def check_blackjack(self):
+        player_blackjack = (
+            len(self.playerHand) == 2
+            and self.calculate_score(self.playerHand) == 21
+            and any(card.isAce for card in self.playerHand)
+        )
+        dealer_blackjack = (
+            len(self.dealerHand) == 2
+            and self.calculate_score(self.dealerHand) == 21
+            and any(card.isAce for card in self.dealerHand)
+        )
+        if player_blackjack and dealer_blackjack:
+            self.blackjack = True
+            self.result = "draw"
+            self.gameOver = True
+            self.playerBlackjackPayout = False
+        elif player_blackjack:
+            self.blackjack = True
+            self.result = "win"
+            self.gameOver = True
+            self.playerBlackjackPayout = True
+        elif dealer_blackjack:
+            self.blackjack = True
+            self.result = "lose"
+            self.gameOver = True
+            self.playerBlackjackPayout = False
+        return self.blackjack
 
     def place_bet(self):
         pass
@@ -129,9 +134,6 @@ class Blackjack:
         pass
 
     def determine_winner(self):
-        pass
-
-    def check_blackjack(self):
         pass
 
     def start_game(self):
