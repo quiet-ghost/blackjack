@@ -1,8 +1,5 @@
 # Core game logic (rules, deck, hands, etc.)
 import random
-import pathlib
-import time
-from warnings import warn
 
 
 class Card:
@@ -32,7 +29,7 @@ class Card:
 
 
 class Blackjack:
-    DECK_THRESHOLD = int(52 * 0.6)  # ~40% of the deck remaining
+    DECK_THRESHOLD = int(416 * 0.6)  # ~40% of the deck remaining
 
     def __init__(self):
         self.deck = []
@@ -51,7 +48,7 @@ class Blackjack:
 
     def create_deck(self):
         self.deck = []
-        for suit in ["C", "D", "H", "S"]:
+        for suit in ["C", "D", "H", "S"] * 8:
             for rank in [
                 "A",
                 "2",
@@ -77,6 +74,7 @@ class Blackjack:
             random.shuffle(self.deck)
 
     def check_deck(self):
+        """Ensure deck has enough cards; refresh and shuffle if ≤ DECK_THRESHOLD or empty."""
         if not self.deck or len(self.deck) <= self.DECK_THRESHOLD:
             self.create_deck()
             self.shuffle_deck()
@@ -141,57 +139,3 @@ class Blackjack:
 
     def reset_game(self):
         pass
-
-
-if __name__ == "__main__":
-    game = Blackjack()
-
-    # Test create_deck()
-    game.create_deck()
-    print("After createDeck:")
-    print("Deck length:", len(game.deck))
-    print("First 5 cards:", [str(card) for card in game.deck[:5]])
-    print("Last 5 cards:", [str(card) for card in game.deck[-5:]])
-    print(" ")
-    # Test shuffle_deck()
-    game.shuffle_deck()
-    print("\nAfter shuffleDeck:")
-    print("Deck length:", len(game.deck))
-    print("First 5 cards:", [str(card) for card in game.deck[:5]])
-    print(" ")
-    # Test shuffle_deck()
-    # Test calculate_score()
-    hand1 = [Card("A", "S"), Card("6", "H")]
-    hand2 = [Card("A", "S"), Card("8", "H"), Card("7", "C")]
-    hand3 = [Card("A", "S"), Card("A", "H")]
-    hand4 = [Card("A", "S"), Card("K", "D")]
-    print("Hand 1:", game.calculate_score(hand1))  # Expect 17
-    print("Hand 2:", game.calculate_score(hand2))  # Expect 16
-    print("Hand 3:", game.calculate_score(hand3))  # Expect 12
-    print("Hand 4:", game.calculate_score(hand4))  # Expect 21
-    print(" ")
-    # Test deal_cards()
-    game.deal_cards()
-    print("\nAfter deal_cards:")
-    print(
-        "Player hand:",
-        [str(card) for card in game.playerHand],
-        "Score:",
-        game.playerScore,
-    )
-    print(
-        "Dealer hand:",
-        [str(card) for card in game.dealerHand],
-        "Score:",
-        game.dealerScore,
-    )
-    print("Player hand length:", len(game.playerHand))
-    print("Dealer hand length:", len(game.dealerHand))
-    print("Deck length:", len(game.deck))
-    print("Player score check:", game.calculate_score(game.playerHand))
-    print("Dealer score check:", game.calculate_score(game.dealerHand))
-    print(" ")
-    # Test check_deck()
-    game.deck = [Card("A", "S")] * 31  # Simulate low deck
-    game.deal_cards()
-    print("Deck length after low deck deal:", len(game.deck))  # Expect 48 (new deck)
