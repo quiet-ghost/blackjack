@@ -141,5 +141,3 @@ class Blackjack:
 
     def reset_game(self):
         pass
-
-        testing
