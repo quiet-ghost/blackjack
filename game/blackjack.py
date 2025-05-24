@@ -112,6 +112,9 @@ class Blackjack:
             self.playerBlackjackPayout = False
         return self.blackjack
 
+    def determine_winner(self):
+        pass
+
     def place_bet(self):
         pass
 
@@ -131,9 +134,6 @@ class Blackjack:
         pass
 
     def dealer_turn(self):
-        pass
-
-    def determine_winner(self):
         pass
 
     def start_game(self):
