@@ -1,0 +1,10 @@
+{
+  "ghost": {
+    "password": "1234",
+    "chips": 1003,
+    "games_played": 15,
+    "games_won": 8,
+    "games_lost": 4,
+    "games_drawn": 3
+  }
+}

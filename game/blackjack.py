@@ -113,31 +113,63 @@ class Blackjack:
         return self.blackjack
 
     def determine_winner(self):
-        pass
+        if self.playerScore > 21:
+            self.result = "lose"
+        elif self.dealerScore > 21:
+            self.result = "win"
+        elif self.playerScore > self.dealerScore:
+            self.result = "win"
+        elif self.playerScore < self.dealerScore:
+            self.result = "lose"
+        else:
+            self.result = "draw"
+        self.gameOver = True
 
     def place_bet(self):
         pass
 
     def hit(self):
-        pass
+        if not self.gameOver and self.currentTurn == "Player":
+            self.check_deck()
+            self.playerHand.append(self.deck.pop())
+            self.playerScore = self.calculate_score(self.playerHand)
+            if self.playerScore > 21:
+                self.result = "lose"
+                self.gameOver = True
 
     def stand(self):
-        pass
+        if not self.gameOver and self.currentTurn == "Player":
+            self.currentTurn = "Dealer"
+            self.dealer_turn()
 
     def split(self):
         pass
 
     def check_bust(self):
-        pass
+        return self.playerScore > 21 or self.dealerScore > 21
 
     def double_down(self):
         pass
 
     def dealer_turn(self):
-        pass
+        while self.dealerScore < 17:
+            self.check_deck()
+            self.dealerHand.append(self.deck.pop())
+            self.dealerScore = self.calculate_score(self.dealerHand)
+        self.determine_winner()
 
     def start_game(self):
-        pass
+        self.reset_game()
+        self.deal_cards()
 
     def reset_game(self):
-        pass
+        self.dealerScore = 0
+        self.playerScore = 0
+        self.gameOver = False
+        self.currentTurn = "Player"
+        self.playerBet = 0
+        self.blackjack = False
+        self.playerBlackjackPayout = False
+        self.result = None
+        self.playerHand = []
+        self.dealerHand = []
